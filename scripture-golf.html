@@ -1,15 +1,6 @@
 <html>
 <script>
 
-var xmlhttp = new XMLHttpRequest();
-
-xmlhttp.onreadystatechange = function() {
-  if (this.readyState == 4 && this.status == 200) {
-    verses = JSON.parse(this.responseText);
-    populate();
-  }
-};
-
 String.prototype.toTitleCase = function () {
     return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 };
@@ -23,7 +14,6 @@ function populate() {
   }
   document.getElementById('verse').innerHTML = content;
   document.getElementById('guess').select();
-
 }
 
 function check() {
@@ -45,6 +35,8 @@ function check() {
         score = guess + " is really close!";
       } else if (num_score < 100) {
         score = guess + " is only " + num_score + " verses off."
+      } else if (num_score < 200) {
+        score = guess + " is so close."
       } else if (num_score < 500) {
         score = guess + " is only a couple chapters off."
       } else {
@@ -62,6 +54,19 @@ function check() {
     + verse[0][0] + ' ' + verse[0][1] + ':' + verse[0][2];
 }
 
+var xmlhttp = new XMLHttpRequest();
+
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    verses = JSON.parse(this.responseText);
+    populate();
+  } else if (this.readyState == 4) {
+    document.getElementById('verse').innerHTML = "ERROR<BR>" + this.responseText + "<br>" + this.readyState + "<br>" + this.status;
+  } else {
+    document.getElementById('verse').innerHTML = "Loading." + ".....".substring(0, this.readyState);
+  }
+};
+
 xmlhttp.open("GET", "bom.json", true);
 xmlhttp.send();
 
@@ -71,7 +76,7 @@ xmlhttp.send();
 <form action='javascript:check(); populate();'>
 <input type="checkbox" id='hard' onClick='populate()'> Hard
 <br><br>
-<div id='verse' style='width: 50%'></div>
+<div id='verse' style='width: 50%'>Loading</div>
 <br>
 <input type='text' id='guess'>
 <br>
