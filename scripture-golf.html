@@ -28,6 +28,9 @@ function populate() {
 
 function check() {
   guess = document.getElementById('guess').value.toTitleCase();
+  if (guess.indexOf(':') < 0) {
+    guess = guess + ':0';
+  }
   m = guess.match(/(.*) (\d+):(\d+)/)
   if (m) {
     expected = verse[0];
@@ -42,6 +45,8 @@ function check() {
         score = guess + " is really close!";
       } else if (num_score < 100) {
         score = guess + " is only " + num_score + " verses off."
+      } else if (num_score < 500) {
+        score = guess + " is only a couple chapters off."
       } else {
         score = guess + " has score " + num_score;
       }
