@@ -1,4 +1,19 @@
 <html>
+<body>
+<center>
+<form action='javascript:check(); populate();'>
+<input type="checkbox" id='hard' onClick='populate()'> Hard
+<br><br>
+<div id='verse' style='width: 50%'>Loading</div>
+<br>
+<input type='text' id='guess'>
+<br>
+<button type="button" onclick="check(); populate();">Check</button>
+<br><br><br>
+<div id='score' style='width: 50%'></div>
+</center>
+</form>
+
 <script>
 
 String.prototype.toTitleCase = function () {
@@ -71,19 +86,6 @@ xmlhttp.open("GET", "bom.json", true);
 xmlhttp.send();
 
 </script>
-<body>
-<center>
-<form action='javascript:check(); populate();'>
-<input type="checkbox" id='hard' onClick='populate()'> Hard
-<br><br>
-<div id='verse' style='width: 50%'>Loading</div>
-<br>
-<input type='text' id='guess'>
-<br>
-<button type="button" onclick="check(); populate();">Check</button>
-<br><br><br>
-<div id='score' style='width: 50%'></div>
-</center>
-</form>
+
 </body>
 </html>
