@@ -1,0 +1,79 @@
+<html>
+<script>
+
+var xmlhttp = new XMLHttpRequest();
+
+xmlhttp.onreadystatechange = function() {
+  if (this.readyState == 4 && this.status == 200) {
+    verses = JSON.parse(this.responseText);
+    populate();
+  }
+};
+
+String.prototype.toTitleCase = function () {
+    return this.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+};
+
+function populate() {
+  index = Math.floor(Math.random() * verses.length);
+  verse = verses[index]
+  content = verse[1];
+  if (document.getElementById('hard').checked) {
+    content = content.replace(/([^.]) [A-Z][a-z-]+/g, '$1 Xxxxxxx');
+  }
+  document.getElementById('verse').innerHTML = content;
+  document.getElementById('guess').select();
+
+}
+
+function check() {
+  guess = document.getElementById('guess').value.toTitleCase();
+  m = guess.match(/(.*) (\d+):(\d+)/)
+  if (m) {
+    expected = verse[0];
+    if (m[1].toLowerCase() != expected[0].toLowerCase()) {
+      score = "Wrong book: " + guess;
+    }
+    else {
+      num_score = Math.abs(m[2] - verse[0][1]) * 100 + Math.abs(m[3] - verse[0][2]);
+      if (num_score == 0) {
+        score = "Congratulations!";
+      } else if (num_score < 5) {
+        score = guess + " is really close!";
+      } else if (num_score < 100) {
+        score = guess + " is only " + num_score + " verses off."
+      } else {
+        score = guess + " has score " + num_score;
+      }
+    }
+  } else {
+    score = 'Didn\'t understand "' + document.getElementById('guess').value + '"';
+  }
+  document.getElementById('score').innerHTML =
+    score
+    + "<br><br><i>"
+    + verse[1]
+    + "<br><br>"
+    + verse[0][0] + ' ' + verse[0][1] + ':' + verse[0][2];
+}
+
+xmlhttp.open("GET", "bom.json", true);
+xmlhttp.send();
+
+</script>
+<body>
+<center>
+<form action='javascript:check(); populate();'>
+<input type="checkbox" id='hard' onClick='populate()'> Hard
+<br><br>
+<div id='verse' style='width: 50%'></div>
+<br>
+<input type='text' id='guess'>
+<br>
+<button type="button" onclick="check(); populate();">Check</button>
+<br><br><br>
+<div id='score' style='width: 50%'></div>
+</center>
+</form>
+</body>
+</html>
